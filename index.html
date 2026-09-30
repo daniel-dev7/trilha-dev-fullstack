@@ -97,6 +97,7 @@
   .chk-wrap input:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
   .quiz-badge{font-size:0.72rem; padding:2px 8px; border-radius:20px; background:var(--done); color:var(--done-text); display:none;}
   .topic.quiz-passed .quiz-badge{display:inline-block;}
+
   .modal-overlay{
     position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none;
     align-items:center; justify-content:center; z-index:50; padding:16px;
@@ -129,9 +130,11 @@
     <h1>Trilha de Aprendizagem — Dev Full Stack</h1>
     <p class="sub">Do zero até estar pronto para trabalhar em sistemas web com Node.js e TypeScript. Um assunto por vídeo.</p>
   </header>
+
   <div class="note">
-    Cada tópico desta trilha aponta diretamente para um vídeo individual relacionado ao assunto. Não há links para playlists ou páginas de canais nos botões de aula.
+    Fonte principal: <strong>Curso em Vídeo</strong> (Gustavo Guanabara), em português. Os botões "Assistir" abrem um vídeo direto; onde não achei o vídeo exato do assunto, abro o primeiro da série e a nota do tópico diz como chegar na aula certa. Nos temas de JS/TS, React, Node/Express e APIs REST, também aparece um botão "Alternativa (PedroTech)" — canal americano muito bom nesses assuntos, em inglês. Como não achei um vídeo único e confirmado do PedroTech pra cada tema específico, esse botão leva ao canal dele com uma dica do que procurar lá dentro, em vez de eu arriscar um link errado.
   </div>
+
   <div class="progress-shell">
     <div class="progress-top">
       <strong id="pctW">0%</strong><span style="color:var(--muted); font-size:0.8rem;">assistidos</span>
@@ -139,137 +142,305 @@
     </div>
     <div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
   </div>
+
   <div id="modules"></div>
+
   <footer>Progresso salvo neste navegador.</footer>
 </div>
-<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalBody"></div></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBody"></div>
+</div>
+
 <script>
+const CEV_LOGICA = "https://www.youtube.com/watch?v=8mei6uVttho";
+const CEV_SQL_SELECT = "https://www.youtube.com/watch?v=GaOlyL3Uv9M";
+const CEV_HTMLCSS = "https://www.youtube.com/watch?v=Ejkb_YpuHWs";
+const CEV_JS = "https://www.youtube.com/watch?v=1-w1RfGIov4";
+const CEV_GIT = "https://www.youtube.com/watch?v=xEKo29OWILE";
+const HORA_DE_CODAR_TS = "https://www.youtube.com/@MatheusBattisti";
+const ROCKETSEAT = "https://www.youtube.com/@rocketseat";
+const ROCKETSEAT_REACT_INTRO = "https://www.youtube.com/watch?v=37SwqREHRGI";
+const MAYK_BRITO_REACT = "https://www.youtube.com/watch?v=K65wUN-2no4";
+const POSTMAN_PLAYLIST = "https://www.youtube.com/@rocketseat";
+const PEDROTECH = "https://www.youtube.com/@PedroTechnologies";
+
 const DATA = [
-{ mod:"1. Lógica de Programação",time:"~2 semanas",topics:[
-{title:"Variáveis, tipos e operadores",channel:"Curso em Vídeo",note:"Curso de Algoritmos",url:"https://www.youtube.com/watch?v=RDrfZ-7WE8c",quiz:[
-{q:"O que é uma variável em programação?",opts:["Um espaço na memória que guarda um valor que pode mudar","Um comando que sempre imprime texto na tela","Um tipo de erro de sintaxe"],correct:0,exp:"Variável é um espaço nomeado na memória usado para guardar um valor que pode ser alterado durante a execução do programa."},
-{q:"Qual operador é usado para comparar igualdade (e não atribuição)?",opts:["=","==","+="],correct:1,exp:"O sinal '=' costuma ser atribuição; '==' (ou '===') é usado para comparar valores."}]},
-{title:"Condicionais e laços de repetição",channel:"Curso em Vídeo",note:"Curso de Algoritmos",url:"https://www.youtube.com/watch?v=_g05aHdBAEY",quiz:[
-{q:"Para que serve uma estrutura condicional (if/else)?",opts:["Repetir um bloco de código várias vezes","Fazer o programa tomar decisões com base em uma condição","Declarar uma função"],correct:1,exp:"Condicionais permitem que o programa escolha um caminho diferente dependendo se uma condição é verdadeira ou falsa."},
-{q:"Um laço 'for' é mais indicado quando você já sabe...",opts:["O nome da variável antes de declará-la","Quantas vezes quer repetir algo","Que o programa nunca vai terminar"],correct:1,exp:"'for' é ideal quando o número de repetições (ou o conjunto a percorrer) já é conhecido."}]},
-{title:"Funções e algoritmos",channel:"Curso em Vídeo",note:"Curso de Algoritmos",url:"https://www.youtube.com/watch?v=-nNx7e8GzHQ",quiz:[
-{q:"Qual a principal vantagem de organizar código em funções?",opts:["Deixa o programa mais lento","Permite reutilizar um bloco de lógica em vários lugares, sem repetir código","É obrigatório em toda linguagem"],correct:1,exp:"Funções evitam repetição de código e tornam o programa mais organizado e fácil de manter."},
-{q:"O que é um algoritmo?",opts:["Uma sequência lógica de passos para resolver um problema","Um tipo de banco de dados","Um erro comum em JavaScript"],correct:0,exp:"Algoritmo é, de forma simples, uma sequência de passos bem definidos para resolver um problema."}]}
+{ mod: "1. Lógica de Programação", time: "~2 semanas", topics: [
+  { title: "Variáveis, tipos e operadores", channel: "Curso em Vídeo", note: "Curso de Algoritmos #01 — as próximas aulas aparecem na barra lateral", url: CEV_LOGICA,
+    quiz: [
+      { q: "O que é uma variável em programação?", opts: ["Um espaço na memória que guarda um valor que pode mudar","Um comando que sempre imprime texto na tela","Um tipo de erro de sintaxe"], correct: 0, exp: "Variável é um espaço nomeado na memória usado para guardar um valor que pode ser alterado durante a execução do programa." },
+      { q: "Qual operador é usado para comparar igualdade (e não atribuição)?", opts: ["=", "==", "+="], correct: 1, exp: "O sinal '=' costuma ser atribuição; '==' (ou '===') é usado para comparar valores." }
+    ]},
+  { title: "Condicionais e laços de repetição", channel: "Curso em Vídeo", note: "Começa na aula #01 do Curso de Algoritmos; siga pela barra lateral até condições e repetições", url: CEV_LOGICA,
+    quiz: [
+      { q: "Para que serve uma estrutura condicional (if/else)?", opts: ["Repetir um bloco de código várias vezes","Fazer o programa tomar decisões com base em uma condição","Declarar uma função"], correct: 1, exp: "Condicionais permitem que o programa escolha um caminho diferente dependendo se uma condição é verdadeira ou falsa." },
+      { q: "Um laço 'for' é mais indicado quando você já sabe...", opts: ["O nome da variável antes de declará-la","Quantas vezes quer repetir algo","Que o programa nunca vai terminar"], correct: 1, exp: "'for' é ideal quando o número de repetições (ou o conjunto a percorrer) já é conhecido." }
+    ]},
+  { title: "Funções e algoritmos", channel: "Curso em Vídeo", note: "Começa na aula #01 do Curso de Algoritmos; siga pela barra lateral até funções", url: CEV_LOGICA,
+    quiz: [
+      { q: "Qual a principal vantagem de organizar código em funções?", opts: ["Deixa o programa mais lento","Permite reutilizar um bloco de lógica em vários lugares, sem repetir código","É obrigatório em toda linguagem"], correct: 1, exp: "Funções evitam repetição de código e tornam o programa mais organizado e fácil de manter." },
+      { q: "O que é um algoritmo?", opts: ["Uma sequência lógica de passos para resolver um problema","Um tipo de banco de dados","Um erro comum em JavaScript"], correct: 0, exp: "Algoritmo é, de forma simples, uma sequência de passos bem definidos para resolver um problema." }
+    ]}
 ]},
-{mod:"2. SQL e Banco de Dados",time:"~2 semanas",topics:[
-{title:"Modelagem de banco de dados (tabelas e relacionamentos)",channel:"Curso em Vídeo",note:"Curso de MySQL",url:"https://www.youtube.com/watch?v=8fxKJWJcRTw",quiz:[
-{q:"O que é uma chave estrangeira (foreign key)?",opts:["Um tipo de senha do banco","Uma coluna que referencia a chave primária de outra tabela","Um comando para apagar tabelas"],correct:1,exp:"Chave estrangeira é a coluna que cria o relacionamento entre duas tabelas, apontando para a chave primária de outra."},
-{q:"O que é uma chave primária (primary key)?",opts:["O identificador único de cada linha da tabela","A primeira coluna criada na tabela","Um tipo de índice opcional"],correct:0,exp:"Chave primária identifica de forma única cada registro (linha) de uma tabela."}]},
-{title:"SELECT, WHERE e JOIN",channel:"Curso em Vídeo",note:"Curso de MySQL",url:"https://www.youtube.com/watch?v=GaOlyL3Uv9M",quiz:[
-{q:"Qual comando SQL é usado para buscar dados de uma tabela?",opts:["GET","SELECT","FETCH"],correct:1,exp:"SELECT é o comando padrão em SQL para consultar dados de uma ou mais tabelas."},
-{q:"Para que serve um JOIN?",opts:["Apagar uma tabela","Combinar dados de duas ou mais tabelas relacionadas","Criar um índice"],correct:1,exp:"JOIN combina linhas de tabelas diferentes com base em uma coluna relacionada, como uma chave estrangeira."}]},
-{title:"INSERT, UPDATE e DELETE",channel:"Curso em Vídeo",note:"Curso de MySQL",url:"https://www.youtube.com/watch?v=wXViczeTr6Q",quiz:[
-{q:"Qual comando adiciona uma nova linha em uma tabela?",opts:["INSERT INTO","ADD ROW","NEW LINE"],correct:0,exp:"INSERT INTO é usado para adicionar novas linhas (registros) a uma tabela."},
-{q:"O que acontece se você rodar um UPDATE sem cláusula WHERE?",opts:["Nada muda","Todas as linhas da tabela são atualizadas","O banco de dados é apagado"],correct:1,exp:"Sem WHERE, o UPDATE (assim como o DELETE) afeta todas as linhas da tabela — por isso é preciso ter cuidado."}]},
-{title:"Índices e otimização de consultas",channel:"Curso em Vídeo",note:"Curso de MySQL",url:"https://www.youtube.com/watch?v=O-lWmmXsIyI",quiz:[
-{q:"Qual a principal vantagem de um índice em uma tabela?",opts:["Deixa o banco de dados menor sempre","Acelera buscas em colunas muito consultadas","Impede que a tabela seja apagada"],correct:1,exp:"Índices funcionam como um 'sumário' que acelera buscas, especialmente em tabelas grandes."},
-{q:"Criar índices em excesso pode...",opts:["Deixar as operações de escrita (INSERT/UPDATE) mais lentas","Deixar o banco impossível de usar","Não ter nenhum efeito colateral"],correct:0,exp:"Cada índice precisa ser atualizado a cada escrita, então índices demais deixam INSERT/UPDATE/DELETE mais lentos."}]}
+{ mod: "2. SQL e Banco de Dados", time: "~2 semanas", topics: [
+  { title: "Modelagem de banco de dados (tabelas e relacionamentos)", channel: "Curso em Vídeo", note: "Vídeo de SELECT — a playlist completa aparece na barra lateral; procure a aula de modelagem/chaves", url: CEV_SQL_SELECT,
+    quiz: [
+      { q: "O que é uma chave estrangeira (foreign key)?", opts: ["Um tipo de senha do banco","Uma coluna que referencia a chave primária de outra tabela","Um comando para apagar tabelas"], correct: 1, exp: "Chave estrangeira é a coluna que cria o relacionamento entre duas tabelas, apontando para a chave primária de outra." },
+      { q: "O que é uma chave primária (primary key)?", opts: ["O identificador único de cada linha da tabela","A primeira coluna criada na tabela","Um tipo de índice opcional"], correct: 0, exp: "Chave primária identifica de forma única cada registro (linha) de uma tabela." }
+    ]},
+  { title: "SELECT, WHERE e JOIN", channel: "Curso em Vídeo", note: "Curso MySQL #11 - SELECT (Parte 1)", url: CEV_SQL_SELECT,
+    quiz: [
+      { q: "Qual comando SQL é usado para buscar dados de uma tabela?", opts: ["GET", "SELECT", "FETCH"], correct: 1, exp: "SELECT é o comando padrão em SQL para consultar dados de uma ou mais tabelas." },
+      { q: "Para que serve um JOIN?", opts: ["Apagar uma tabela","Combinar dados de duas ou mais tabelas relacionadas","Criar um índice"], correct: 1, exp: "JOIN combina linhas de tabelas diferentes com base em uma coluna relacionada, como uma chave estrangeira." }
+    ]},
+  { title: "INSERT, UPDATE e DELETE", channel: "Curso em Vídeo", note: "Vídeo de SELECT — use a barra lateral do YouTube pra achar a aula de INSERT/UPDATE/DELETE na mesma série", url: CEV_SQL_SELECT,
+    quiz: [
+      { q: "Qual comando adiciona uma nova linha em uma tabela?", opts: ["INSERT INTO", "ADD ROW", "NEW LINE"], correct: 0, exp: "INSERT INTO é usado para adicionar novas linhas (registros) a uma tabela." },
+      { q: "O que acontece se você rodar um UPDATE sem cláusula WHERE?", opts: ["Nada muda","Todas as linhas da tabela são atualizadas","O banco de dados é apagado"], correct: 1, exp: "Sem WHERE, o UPDATE (assim como o DELETE) afeta todas as linhas da tabela — por isso é preciso ter cuidado." }
+    ]},
+  { title: "Índices e otimização de consultas", channel: "Curso em Vídeo", note: "Vídeo de SELECT — use a barra lateral do YouTube pra achar a aula de índices na mesma série", url: CEV_SQL_SELECT,
+    quiz: [
+      { q: "Qual a principal vantagem de um índice em uma tabela?", opts: ["Deixa o banco de dados menor sempre","Acelera buscas em colunas muito consultadas","Impede que a tabela seja apagada"], correct: 1, exp: "Índices funcionam como um 'sumário' que acelera buscas, especialmente em tabelas grandes." },
+      { q: "Criar índices em excesso pode...", opts: ["Deixar as operações de escrita (INSERT/UPDATE) mais lentas","Deixar o banco impossível de usar","Não ter nenhum efeito colateral"], correct: 0, exp: "Cada índice precisa ser atualizado a cada escrita, então índices demais deixam INSERT/UPDATE/DELETE mais lentos." }
+    ]}
 ]},
-{mod:"3. Fundamentos Web (HTML, CSS, JS, TS)",time:"~4 semanas",topics:[
-{title:"HTML: estrutura e semântica",channel:"Curso em Vídeo",note:"Curso de HTML5 e CSS3",url:"https://www.youtube.com/watch?v=HaSgt1hK2Fs",quiz:[
-{q:"Qual tag HTML é usada para criar um link?",opts:["<link>","<a>","<href>"],correct:1,exp:"A tag <a> (anchor) com o atributo href cria links em HTML."},
-{q:"Por que usar tags semânticas (<header>, <nav>, <main>) em vez de só <div>?",opts:["Porque deixam o código mais bonito visualmente na tela","Porque dão significado à estrutura, ajudando acessibilidade e SEO","Porque são obrigatórias por lei"],correct:1,exp:"Tags semânticas comunicam o papel de cada parte da página para navegadores, leitores de tela e buscadores."}]},
-{title:"CSS: layout com Flexbox e Grid",channel:"Curso em Vídeo",note:"Curso de HTML5 e CSS3",url:"https://www.youtube.com/watch?v=YeGn9nGies0",quiz:[
-{q:"Flexbox e CSS Grid servem principalmente para...",opts:["Adicionar cores ao texto","Organizar o layout de elementos na página","Validar formulários"],correct:1,exp:"Flexbox e CSS Grid são sistemas de layout usados para posicionar e organizar elementos na página."},
-{q:"Qual a diferença básica entre Flexbox e Grid?",opts:["Flexbox é 1 dimensão (linha ou coluna); Grid trabalha em 2 dimensões ao mesmo tempo","São exatamente a mesma coisa","Grid só funciona em navegadores antigos"],correct:0,exp:"Flexbox organiza itens em uma linha ou coluna; Grid permite controlar linhas e colunas ao mesmo tempo."}]},
-{title:"JavaScript: DOM e eventos",channel:"Curso em Vídeo",note:"Curso de JavaScript Moderno",url:"https://www.youtube.com/watch?v=wWnBB-mZIvY",quiz:[
-{q:"O que é o DOM?",opts:["Um banco de dados do navegador","A representação em árvore da página HTML que o JS pode manipular","Uma linguagem de programação"],correct:1,exp:"DOM (Document Object Model) é a estrutura em árvore que representa a página, permitindo que o JavaScript a leia e modifique."},
-{q:"O que é um 'event listener'?",opts:["Uma função que espera e reage a uma ação do usuário, como um clique","Um tipo de variável","Um erro comum de JavaScript"],correct:0,exp:"Um event listener 'escuta' um evento (clique, digitação, etc.) e executa uma função quando ele acontece."}]},
-{title:"JavaScript: assíncrono (Promises e async/await)",channel:"Curso em Vídeo",note:"Curso de JavaScript Moderno",url:"https://www.youtube.com/watch?v=m55PTVUrlnA",quiz:[
-{q:"Para que serve 'await' dentro de uma função async?",opts:["Pausar a execução até uma Promise ser resolvida","Declarar uma variável global","Criar um laço de repetição"],correct:0,exp:"'await' pausa a execução da função até que a Promise seja resolvida, deixando o código assíncrono mais fácil de ler."},
-{q:"O que representa uma Promise em JavaScript?",opts:["Um valor que pode estar disponível agora, no futuro, ou nunca (erro)","Um tipo de laço de repetição","Um comentário no código"],correct:0,exp:"Promise representa o resultado eventual (sucesso ou falha) de uma operação assíncrona."}]},
-{title:"TypeScript: tipos básicos",channel:"PedroTech",note:"Vídeo direto sobre TypeScript",url:"https://www.youtube.com/watch?v=3mDny9XAgic",quiz:[
-{q:"Qual a principal diferença entre JavaScript e TypeScript?",opts:["TypeScript adiciona tipagem estática opcional ao JavaScript","São linguagens completamente diferentes, sem relação","TypeScript só funciona no back-end"],correct:0,exp:"TypeScript é um superset do JavaScript que adiciona tipos, sendo depois convertido (compilado) para JS puro."},
-{q:"Como se declara que uma variável é do tipo número em TypeScript?",opts:["let idade: number = 30","let idade = number(30)","number idade = 30"],correct:0,exp:"A sintaxe usa dois-pontos após o nome da variável seguido do tipo: 'let idade: number = 30'."}]},
-{title:"TypeScript: interfaces",channel:"PedroTech",note:"Vídeo direto sobre TypeScript",url:"https://www.youtube.com/watch?v=3mDny9XAgic",quiz:[
-{q:"Para que serve uma 'interface' em TypeScript?",opts:["Para estilizar componentes","Para descrever o formato esperado de um objeto","Para conectar ao banco de dados"],correct:1,exp:"Interfaces descrevem a 'forma' de um objeto (quais propriedades e tipos ele deve ter), ajudando a evitar erros."},
-{q:"Se um objeto não tiver uma propriedade obrigatória de uma interface, o que acontece?",opts:["Nada, TypeScript ignora","O TypeScript acusa um erro de tipo na compilação","O programa roda mais rápido"],correct:1,exp:"TypeScript verifica se o objeto respeita a interface e aponta erro em tempo de compilação caso falte algo obrigatório."}]}
+{ mod: "3. Fundamentos Web (HTML, CSS, JS, TS)", time: "~4 semanas", topics: [
+  { title: "HTML: estrutura e semântica", channel: "Curso em Vídeo", note: "Início do Curso de HTML5 e CSS3", url: CEV_HTMLCSS,
+    quiz: [
+      { q: "Qual tag HTML é usada para criar um link?", opts: ["<link>", "<a>", "<href>"], correct: 1, exp: "A tag <a> (anchor) com o atributo href cria links em HTML." },
+      { q: "Por que usar tags semânticas (<header>, <nav>, <main>) em vez de só <div>?", opts: ["Porque deixam o código mais bonito visualmente na tela","Porque dão significado à estrutura, ajudando acessibilidade e SEO","Porque são obrigatórias por lei"], correct: 1, exp: "Tags semânticas comunicam o papel de cada parte da página para navegadores, leitores de tela e buscadores." }
+    ]},
+  { title: "CSS: layout com Flexbox e Grid", channel: "Curso em Vídeo", note: "Início do Curso de HTML5 e CSS3; siga pela barra lateral até a parte de CSS", url: CEV_HTMLCSS,
+    quiz: [
+      { q: "Flexbox e CSS Grid servem principalmente para...", opts: ["Adicionar cores ao texto","Organizar o layout de elementos na página","Validar formulários"], correct: 1, exp: "Flexbox e CSS Grid são sistemas de layout usados para posicionar e organizar elementos na página." },
+      { q: "Qual a diferença básica entre Flexbox e Grid?", opts: ["Flexbox é 1 dimensão (linha ou coluna); Grid trabalha em 2 dimensões ao mesmo tempo","São exatamente a mesma coisa","Grid só funciona em navegadores antigos"], correct: 0, exp: "Flexbox organiza itens em uma linha ou coluna; Grid permite controlar linhas e colunas ao mesmo tempo." }
+    ]},
+  { title: "JavaScript: DOM e eventos", channel: "Curso em Vídeo", note: "Curso JavaScript #01; as aulas de DOM e eventos (#10) estão na sequência", url: CEV_JS,
+    quiz: [
+      { q: "O que é o DOM?", opts: ["Um banco de dados do navegador","A representação em árvore da página HTML que o JS pode manipular","Uma linguagem de programação"], correct: 1, exp: "DOM (Document Object Model) é a estrutura em árvore que representa a página, permitindo que o JavaScript a leia e modifique." },
+      { q: "O que é um 'event listener'?", opts: ["Uma função que espera e reage a uma ação do usuário, como um clique","Um tipo de variável","Um erro comum de JavaScript"], correct: 0, exp: "Um event listener 'escuta' um evento (clique, digitação, etc.) e executa uma função quando ele acontece." }
+    ]},
+  { title: "JavaScript: assíncrono (Promises e async/await)", channel: "Curso em Vídeo", note: "Início do Curso de JavaScript; async/await não é o foco dele, complemente com a alternativa", url: CEV_JS,
+    altChannel: "PedroTech", altNote: "Procure 'async await' ou 'fetch API' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "Para que serve 'await' dentro de uma função async?", opts: ["Pausar a execução até uma Promise ser resolvida","Declarar uma variável global","Criar um laço de repetição"], correct: 0, exp: "'await' pausa a execução da função até que a Promise seja resolvida, deixando o código assíncrono mais fácil de ler." },
+      { q: "O que representa uma Promise em JavaScript?", opts: ["Um valor que pode estar disponível agora, no futuro, ou nunca (erro)","Um tipo de laço de repetição","Um comentário no código"], correct: 0, exp: "Promise representa o resultado eventual (sucesso ou falha) de uma operação assíncrona." }
+    ]},
+  { title: "TypeScript: tipos básicos", channel: "Hora de Codar", note: "Procure 'Curso de TypeScript' no canal", url: HORA_DE_CODAR_TS,
+    quiz: [
+      { q: "Qual a principal diferença entre JavaScript e TypeScript?", opts: ["TypeScript adiciona tipagem estática opcional ao JavaScript","São linguagens completamente diferentes, sem relação","TypeScript só funciona no back-end"], correct: 0, exp: "TypeScript é um superset do JavaScript que adiciona tipos, sendo depois convertido (compilado) para JS puro." },
+      { q: "Como se declara que uma variável é do tipo número em TypeScript?", opts: ["let idade: number = 30", "let idade = number(30)", "number idade = 30"], correct: 0, exp: "A sintaxe usa dois-pontos após o nome da variável seguido do tipo: 'let idade: number = 30'." }
+    ]},
+  { title: "TypeScript: interfaces", channel: "Hora de Codar", note: "Procure 'Curso de TypeScript' no canal", url: HORA_DE_CODAR_TS,
+    altChannel: "PedroTech", altNote: "Procure 'TypeScript' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "Para que serve uma 'interface' em TypeScript?", opts: ["Para estilizar componentes","Para descrever o formato esperado de um objeto","Para conectar ao banco de dados"], correct: 1, exp: "Interfaces descrevem a 'forma' de um objeto (quais propriedades e tipos ele deve ter), ajudando a evitar erros." },
+      { q: "Se um objeto não tiver uma propriedade obrigatória de uma interface, o que acontece?", opts: ["Nada, TypeScript ignora","O TypeScript acusa um erro de tipo na compilação","O programa roda mais rápido"], correct: 1, exp: "TypeScript verifica se o objeto respeita a interface e aponta erro em tempo de compilação caso falte algo obrigatório." }
+    ]}
 ]},
-{mod:"4. Backend com Node.js e TypeScript",time:"~4 semanas",topics:[
-{title:"O que é uma API REST e os verbos HTTP",channel:"Rocketseat",note:"Vídeo direto sobre API REST e HTTP",url:"https://www.youtube.com/watch?v=ghTrp1x_1As",quiz:[
-{q:"O que é uma API REST?",opts:["Um banco de dados NoSQL","Um conjunto de regras para comunicação entre sistemas via HTTP","Uma linguagem de programação"],correct:1,exp:"REST é um estilo de arquitetura para APIs que usa verbos HTTP (GET, POST, PUT, DELETE) para operar sobre recursos."},
-{q:"Qual verbo HTTP é usado para criar um novo recurso?",opts:["GET","POST","DELETE"],correct:1,exp:"POST é o verbo usado, por convenção, para criar um novo recurso no servidor."}]},
-{title:"Criando um servidor com Node.js e Express",channel:"Rocketseat",note:"Vídeo direto sobre Node.js e Express",url:"https://www.youtube.com/watch?v=ghTrp1x_1As",quiz:[
-{q:"O que o Express facilita ao criar um servidor Node.js?",opts:["Definir rotas e middlewares de forma simples","Compilar o TypeScript automaticamente","Criar o banco de dados sozinho"],correct:0,exp:"Express é um framework que simplifica criar rotas, lidar com requisições e usar middlewares em um servidor Node.js."},
-{q:"O que é um 'middleware' no Express?",opts:["Uma função que roda entre a requisição chegar e a resposta ser enviada","Um tipo de banco de dados","O nome do servidor"],correct:0,exp:"Middleware é uma função que intercepta a requisição no meio do caminho, podendo validar, logar ou modificar algo antes da resposta final."}]},
-{title:"Testando APIs no Postman",channel:"Canal do Tio",note:"Vídeo direto sobre Postman",url:"https://www.youtube.com/watch?v=x9qaoDKNq0E",quiz:[
-{q:"No Postman, para que serve uma 'coleção' (collection)?",opts:["Agrupar e organizar várias requisições relacionadas","Apagar o banco de dados","Compilar o código TypeScript"],correct:0,exp:"Coleções agrupam requisições relacionadas, facilitando organizar e reutilizar testes de API."},
-{q:"Qual informação o Postman mostra após enviar uma requisição?",opts:["Apenas o tempo de resposta","Status code, corpo da resposta e tempo, entre outros","Somente o código-fonte do servidor"],correct:1,exp:"O Postman mostra o status code (200, 404, etc.), o corpo da resposta, headers e o tempo da requisição."}]},
-{title:"Autenticação com JWT",channel:"Rocketseat",note:"Vídeo direto sobre autenticação com JWT",url:"https://www.youtube.com/watch?v=KKTX1l3sZGk",quiz:[
-{q:"O que significa JWT?",opts:["JSON Web Token","Java Web Tool","JavaScript With TypeScript"],correct:0,exp:"JWT (JSON Web Token) é um formato de token usado para transmitir informações de forma segura entre partes, muito usado em autenticação."},
-{q:"Depois do login, como o cliente costuma enviar o token JWT nas próximas requisições?",opts:["No corpo de um e-mail","No header Authorization (ex: Bearer token)","Não precisa enviar nada"],correct:1,exp:"O token costuma ser enviado no header 'Authorization: Bearer <token>' em cada requisição protegida."}]}
+{ mod: "4. Backend com Node.js e TypeScript", time: "~4 semanas", topics: [
+  { title: "O que é uma API REST e os verbos HTTP", channel: "Rocketseat", note: "Procure 'API REST' no canal", url: ROCKETSEAT,
+    altChannel: "PedroTech", altNote: "Procure 'REST API' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "O que é uma API REST?", opts: ["Um banco de dados NoSQL","Um conjunto de regras para comunicação entre sistemas via HTTP","Uma linguagem de programação"], correct: 1, exp: "REST é um estilo de arquitetura para APIs que usa verbos HTTP (GET, POST, PUT, DELETE) para operar sobre recursos." },
+      { q: "Qual verbo HTTP é usado para criar um novo recurso?", opts: ["GET", "POST", "DELETE"], correct: 1, exp: "POST é o verbo usado, por convenção, para criar um novo recurso no servidor." }
+    ]},
+  { title: "Criando um servidor com Node.js e Express", channel: "Rocketseat", note: "Procure 'Node.js' ou 'Express' no canal", url: ROCKETSEAT,
+    altChannel: "PedroTech", altNote: "Procure 'Express' ou 'Node.js' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "O que o Express facilita ao criar um servidor Node.js?", opts: ["Definir rotas e middlewares de forma simples","Compilar o TypeScript automaticamente","Criar o banco de dados sozinho"], correct: 0, exp: "Express é um framework que simplifica criar rotas, lidar com requisições e usar middlewares em um servidor Node.js." },
+      { q: "O que é um 'middleware' no Express?", opts: ["Uma função que roda entre a requisição chegar e a resposta ser enviada","Um tipo de banco de dados","O nome do servidor"], correct: 0, exp: "Middleware é uma função que intercepta a requisição no meio do caminho, podendo validar, logar ou modificar algo antes da resposta final." }
+    ]},
+  { title: "Testando APIs no Postman", channel: "Rocketseat", note: "Sem vídeo direto confirmado — busque 'Postman' no canal", url: POSTMAN_PLAYLIST,
+    quiz: [
+      { q: "No Postman, para que serve uma 'coleção' (collection)?", opts: ["Agrupar e organizar várias requisições relacionadas","Apagar o banco de dados","Compilar o código TypeScript"], correct: 0, exp: "Coleções agrupam requisições relacionadas, facilitando organizar e reutilizar testes de API." },
+      { q: "Qual informação o Postman mostra após enviar uma requisição?", opts: ["Apenas o tempo de resposta","Status code, corpo da resposta e tempo, entre outros","Somente o código-fonte do servidor"], correct: 1, exp: "O Postman mostra o status code (200, 404, etc.), o corpo da resposta, headers e o tempo da requisição." }
+    ]},
+  { title: "Autenticação com JWT", channel: "Rocketseat", note: "Procure 'JWT' ou 'autenticação' no canal", url: ROCKETSEAT,
+    altChannel: "PedroTech", altNote: "Procure 'JWT authentication' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "O que significa JWT?", opts: ["JSON Web Token", "Java Web Tool", "JavaScript With TypeScript"], correct: 0, exp: "JWT (JSON Web Token) é um formato de token usado para transmitir informações de forma segura entre partes, muito usado em autenticação." },
+      { q: "Depois do login, como o cliente costuma enviar o token JWT nas próximas requisições?", opts: ["No corpo de um e-mail","No header Authorization (ex: Bearer token)","Não precisa enviar nada"], correct: 1, exp: "O token costuma ser enviado no header 'Authorization: Bearer <token>' em cada requisição protegida." }
+    ]}
 ]},
-{mod:"5. Front-end com React",time:"~4 semanas",topics:[
-{title:"Componentes e props",channel:"Rocketseat",note:"Introdução ao React",url:"https://www.youtube.com/watch?v=37SwqREHRGI",quiz:[
-{q:"O que são 'props' em React?",opts:["Dados passados de um componente pai para um filho","Um tipo de banco de dados","Um comando do terminal"],correct:0,exp:"Props são propriedades passadas de um componente pai para um componente filho, geralmente somente leitura."},
-{q:"Um componente React pode ser reaproveitado com dados diferentes?",opts:["Não, cada componente serve só para um caso","Sim, passando props diferentes a cada uso","Só se for reescrito do zero"],correct:1,exp:"A mesma definição de componente pode ser usada várias vezes, recebendo props diferentes para exibir dados diferentes."}]},
-{title:"State e re-renderização",channel:"Rocketseat",note:"Introdução ao React",url:"https://www.youtube.com/watch?v=L6raE_UfweY",quiz:[
-{q:"O que acontece quando o 'state' de um componente muda?",opts:["Nada, o state é fixo","O componente é re-renderizado para refletir o novo valor","O programa trava"],correct:1,exp:"Ao mudar o state, o React re-renderiza o componente para exibir a interface atualizada."},
-{q:"Qual a diferença entre state e props?",opts:["State é interno e controlado pelo próprio componente; props vêm de fora","São a mesma coisa com nomes diferentes","Props só existem em Vue, não em React"],correct:0,exp:"State pertence ao componente e pode mudar internamente; props são passadas de fora e não devem ser alteradas pelo componente que as recebe."}]},
-{title:"useState: gerenciando estado",channel:"Rocketseat",note:"Vídeo direto sobre gerenciamento de estado/React",url:"https://www.youtube.com/watch?v=324czHa9O9U",quiz:[
-{q:"Para que serve o hook useState?",opts:["Para adicionar estado a um componente funcional","Para estilizar um componente","Para fazer requisições HTTP automaticamente"],correct:0,exp:"useState permite que componentes funcionais tenham estado próprio, algo que antes só existia em componentes de classe."},
-{q:"useState retorna...",opts:["Apenas o valor atual do estado","Um par: o valor atual e uma função para atualizá-lo","Uma Promise"],correct:1,exp:"useState retorna um array com o valor atual e a função usada para atualizar esse valor, ex: const [contador, setContador] = useState(0)."}]},
-{title:"useEffect: efeitos colaterais",channel:"Rocketseat",note:"Vídeo direto sobre gerenciamento de estado/React",url:"https://www.youtube.com/watch?v=L6raE_UfweY",quiz:[
-{q:"Quando o código dentro de um useEffect (sem lista de dependências) é executado?",opts:["Nunca","Depois de toda renderização do componente","Somente quando o usuário clica em um botão"],correct:1,exp:"Sem array de dependências, o useEffect roda após toda renderização; com array vazio [], roda só uma vez."},
-{q:"Buscar dados de uma API é um bom exemplo de...",opts:["Efeito colateral (side effect)","Um tipo de prop","Um erro de sintaxe"],correct:0,exp:"Buscar dados é considerado um efeito colateral, pois interage com algo fora do componente (o servidor) — por isso costuma ficar em um useEffect."}]},
-{title:"Consumindo sua própria API no front-end",channel:"Rocketseat",note:"Introdução ao React",url:"https://www.youtube.com/watch?v=Pbs1VIwPoRA",quiz:[
-{q:"Qual função nativa do JavaScript é comumente usada para consumir uma API no front-end?",opts:["fetch()","print()","connect()"],correct:0,exp:"fetch() é a função nativa do navegador usada para fazer requisições HTTP a partir do JavaScript."},
-{q:"Por que combinar fetch() com useEffect em React?",opts:["Porque buscar dados é um efeito colateral que deve rodar após a renderização","Porque é obrigatório por lei","Porque deixa o app mais lento de propósito"],correct:0,exp:"Buscar dados é um efeito colateral, então faz sentido rodar dentro de um useEffect, após o componente renderizar."}]}
+{ mod: "5. Front-end com React", time: "~4 semanas", topics: [
+  { title: "Componentes e props", channel: "Rocketseat", note: "Introdução ao React", url: ROCKETSEAT_REACT_INTRO,
+    altChannel: "PedroTech", altNote: "Procure 'React Crash Course' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "O que são 'props' em React?", opts: ["Dados passados de um componente pai para um filho","Um tipo de banco de dados","Um comando do terminal"], correct: 0, exp: "Props são propriedades passadas de um componente pai para um componente filho, geralmente somente leitura." },
+      { q: "Um componente React pode ser reaproveitado com dados diferentes?", opts: ["Não, cada componente serve só para um caso","Sim, passando props diferentes a cada uso","Só se for reescrito do zero"], correct: 1, exp: "A mesma definição de componente pode ser usada várias vezes, recebendo props diferentes para exibir dados diferentes." }
+    ]},
+  { title: "State e re-renderização", channel: "Rocketseat", note: "Introdução ao React", url: ROCKETSEAT_REACT_INTRO,
+    altChannel: "Mayk Brito", altNote: "Vídeo introdutório de React", altUrl: MAYK_BRITO_REACT,
+    quiz: [
+      { q: "O que acontece quando o 'state' de um componente muda?", opts: ["Nada, o state é fixo","O componente é re-renderizado para refletir o novo valor","O programa trava"], correct: 1, exp: "Ao mudar o state, o React re-renderiza o componente para exibir a interface atualizada." },
+      { q: "Qual a diferença entre state e props?", opts: ["State é interno e controlado pelo próprio componente; props vêm de fora","São a mesma coisa com nomes diferentes","Props só existem em Vue, não em React"], correct: 0, exp: "State pertence ao componente e pode mudar internamente; props são passadas de fora e não devem ser alteradas pelo componente que as recebe." }
+    ]},
+  { title: "useState: gerenciando estado", channel: "Mayk Brito", note: "Vídeo introdutório de React", url: MAYK_BRITO_REACT,
+    altChannel: "PedroTech", altNote: "Procure 'useState' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "Para que serve o hook useState?", opts: ["Para adicionar estado a um componente funcional","Para estilizar um componente","Para fazer requisições HTTP automaticamente"], correct: 0, exp: "useState permite que componentes funcionais tenham estado próprio, algo que antes só existia em componentes de classe." },
+      { q: "useState retorna...", opts: ["Apenas o valor atual do estado","Um par: o valor atual e uma função para atualizá-lo","Uma Promise"], correct: 1, exp: "useState retorna um array com o valor atual e a função usada para atualizar esse valor, ex: const [contador, setContador] = useState(0)." }
+    ]},
+  { title: "useEffect: efeitos colaterais", channel: "Mayk Brito", note: "Vídeo introdutório de React", url: MAYK_BRITO_REACT,
+    altChannel: "PedroTech", altNote: "Procure 'useEffect' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "Quando o código dentro de um useEffect (sem lista de dependências) é executado?", opts: ["Nunca","Depois de toda renderização do componente","Somente quando o usuário clica em um botão"], correct: 1, exp: "Sem array de dependências, o useEffect roda após toda renderização; com array vazio [], roda só uma vez." },
+      { q: "Buscar dados de uma API é um bom exemplo de...", opts: ["Efeito colateral (side effect)","Um tipo de prop","Um erro de sintaxe"], correct: 0, exp: "Buscar dados é considerado um efeito colateral, pois interage com algo fora do componente (o servidor) — por isso costuma ficar em um useEffect." }
+    ]},
+  { title: "Consumindo sua própria API no front-end", channel: "Rocketseat", note: "Introdução ao React", url: ROCKETSEAT_REACT_INTRO,
+    altChannel: "PedroTech", altNote: "Procure 'fetch API React' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "Qual função nativa do JavaScript é comumente usada para consumir uma API no front-end?", opts: ["fetch()", "print()", "connect()"], correct: 0, exp: "fetch() é a função nativa do navegador usada para fazer requisições HTTP a partir do JavaScript." },
+      { q: "Por que combinar fetch() com useEffect em React?", opts: ["Porque buscar dados é um efeito colateral que deve rodar após a renderização","Porque é obrigatório por lei","Porque deixa o app mais lento de propósito"], correct: 0, exp: "Buscar dados é um efeito colateral, então faz sentido rodar dentro de um useEffect, após o componente renderizar." }
+    ]}
 ]},
-{mod:"6. Git, Deploy e Projeto Final",time:"~2 semanas",topics:[
-{title:"Git: commits e histórico local",channel:"Curso em Vídeo",note:"Curso de Git e GitHub",url:"https://www.youtube.com/watch?v=xEKo29OWILE",quiz:[
-{q:"O que faz o comando 'git commit'?",opts:["Envia o código para o GitHub","Registra um snapshot das mudanças no histórico local","Apaga o repositório"],correct:1,exp:"'git commit' salva um snapshot (ponto de restauração) das mudanças no histórico local do repositório."},
-{q:"O que o comando 'git add' faz antes de um commit?",opts:["Envia o código para a nuvem","Seleciona quais mudanças farão parte do próximo commit","Cria um novo repositório"],correct:1,exp:"'git add' move as mudanças para a 'staging area', escolhendo o que vai entrar no próximo commit."}]},
-{title:"GitHub: push, pull e colaboração",channel:"Curso em Vídeo",note:"Curso de Git e GitHub",url:"https://www.youtube.com/watch?v=xEKo29OWILE",quiz:[
-{q:"Qual comando envia os commits locais para o repositório remoto (ex: GitHub)?",opts:["git push","git pull","git clone"],correct:0,exp:"'git push' envia os commits do repositório local para o repositório remoto."},
-{q:"Para que serve um Pull Request no GitHub?",opts:["Para apagar uma branch","Para propor e revisar mudanças antes de juntá-las à branch principal","Para criar uma conta nova"],correct:1,exp:"Pull Request é o mecanismo do GitHub para propor mudanças de uma branch, permitindo revisão antes de fazer o merge."}]},
-{title:"Deploy de aplicações",channel:"Rocketseat",note:"Vídeo direto sobre deploy",url:"https://www.youtube.com/watch?v=keaS0Rr_eg8",quiz:[
-{q:"O que significa 'fazer o deploy' de uma aplicação?",opts:["Apagar o código do computador","Publicar a aplicação em um servidor para ficar acessível na internet","Escrever testes automatizados"],correct:1,exp:"Deploy é o processo de publicar a aplicação em um ambiente (servidor/nuvem) para que fique acessível publicamente."},
-{q:"Por que usar variáveis de ambiente (.env) em produção?",opts:["Para deixar o código mais bonito","Para guardar informações sensíveis (senhas, chaves) fora do código-fonte","Não tem nenhuma utilidade real"],correct:1,exp:"Variáveis de ambiente mantêm dados sensíveis fora do código, evitando expô-los publicamente no repositório."}]}
+{ mod: "6. Git, Deploy e Projeto Final", time: "~2 semanas", topics: [
+  { title: "Git: commits e histórico local", channel: "Curso em Vídeo", note: "Aula #01 do Curso de Git e GitHub", url: CEV_GIT,
+    quiz: [
+      { q: "O que faz o comando 'git commit'?", opts: ["Envia o código para o GitHub","Registra um snapshot das mudanças no histórico local","Apaga o repositório"], correct: 1, exp: "'git commit' salva um snapshot (ponto de restauração) das mudanças no histórico local do repositório." },
+      { q: "O que o comando 'git add' faz antes de um commit?", opts: ["Envia o código para a nuvem","Seleciona quais mudanças farão parte do próximo commit","Cria um novo repositório"], correct: 1, exp: "'git add' move as mudanças para a 'staging area', escolhendo o que vai entrar no próximo commit." }
+    ]},
+  { title: "GitHub: push, pull e colaboração", channel: "Curso em Vídeo", note: "Aula #01 do Curso de Git e GitHub; siga pela barra lateral até GitHub", url: CEV_GIT,
+    quiz: [
+      { q: "Qual comando envia os commits locais para o repositório remoto (ex: GitHub)?", opts: ["git push", "git pull", "git clone"], correct: 0, exp: "'git push' envia os commits do repositório local para o repositório remoto." },
+      { q: "Para que serve um Pull Request no GitHub?", opts: ["Para apagar uma branch","Para propor e revisar mudanças antes de juntá-las à branch principal","Para criar uma conta nova"], correct: 1, exp: "Pull Request é o mecanismo do GitHub para propor mudanças de uma branch, permitindo revisão antes de fazer o merge." }
+    ]},
+  { title: "Deploy de aplicações", channel: "Rocketseat", note: "Procure 'deploy Vercel' ou 'deploy Render' no canal", url: ROCKETSEAT,
+    altChannel: "PedroTech", altNote: "Procure 'deploy Vercel' no canal", altUrl: PEDROTECH,
+    quiz: [
+      { q: "O que significa 'fazer o deploy' de uma aplicação?", opts: ["Apagar o código do computador","Publicar a aplicação em um servidor para ficar acessível na internet","Escrever testes automatizados"], correct: 1, exp: "Deploy é o processo de publicar a aplicação em um ambiente (servidor/nuvem) para que fique acessível publicamente." },
+      { q: "Por que usar variáveis de ambiente (.env) em produção?", opts: ["Para deixar o código mais bonito","Para guardar informações sensíveis (senhas, chaves) fora do código-fonte","Não tem nenhuma utilidade real"], correct: 1, exp: "Variáveis de ambiente mantêm dados sensíveis fora do código, evitando expô-los publicamente no repositório." }
+    ]}
 ]}
 ];
 
-let state={};
-try{state=JSON.parse(localStorage.getItem('trilha-v4')||'{}')}catch(e){state={}}
-function save(){try{localStorage.setItem('trilha-v4',JSON.stringify(state))}catch(e){}}
-function key(mi,ti,suffix){return mi+'-'+ti+'-'+suffix}
-const container=document.getElementById('modules'),overlay=document.getElementById('modalOverlay'),modalBody=document.getElementById('modalBody');
+let state = {};
+try { state = JSON.parse(localStorage.getItem('trilha-v3') || '{}'); } catch(e) { state = {}; }
+function save(){ try { localStorage.setItem('trilha-v3', JSON.stringify(state)); } catch(e) {} }
+function key(mi, ti, suffix){ return mi+'-'+ti+'-'+suffix; }
+
+const container = document.getElementById('modules');
+const overlay = document.getElementById('modalOverlay');
+const modalBody = document.getElementById('modalBody');
+
 function render(){
-container.innerHTML='';let totalTopics=0,watchedCount=0,quizPassedCount=0;
-DATA.forEach((mod,mi)=>{
-const row=document.createElement('div');row.className='mod-title-row';row.innerHTML='<h2>'+mod.mod+'</h2><span class="mod-time">'+mod.time+'</span>';container.appendChild(row);
-mod.topics.forEach((topic,ti)=>{
-totalTopics++;const watched=!!state[key(mi,ti,'w')],quizPassed=!!state[key(mi,ti,'q')];if(watched)watchedCount++;if(quizPassed)quizPassedCount++;
-const el=document.createElement('div');el.className='topic'+(watched?' watched':'')+(quizPassed?' quiz-passed':'');
-el.innerHTML='<div class="topic-head"><div class="topic-num">'+(watched?'✓':(ti+1))+'</div><div class="topic-title"><h3>'+topic.title+'</h3><div class="video-line">'+topic.channel+' · '+topic.note+'</div></div></div><div class="row"><a class="btn primary" href="'+topic.url+'" target="_blank" rel="noopener">▶ Assistir vídeo</a><button class="btn quiz" data-mi="'+mi+'" data-ti="'+ti+'">Testar conhecimento</button><span class="quiz-badge">quiz OK</span><label class="chk-wrap"><input type="checkbox" '+(watched?'checked':'')+' data-mi="'+mi+'" data-ti="'+ti+'" class="watch-chk"> Assisti</label></div>';
-el.querySelector('.watch-chk').addEventListener('change',e=>{state[key(mi,ti,'w')]=e.target.checked;save();render()});
-el.querySelector('.btn.quiz').addEventListener('click',()=>openQuiz(mi,ti));container.appendChild(el);
-})});
-document.getElementById('pctW').textContent=totalTopics?Math.round(watchedCount/totalTopics*100)+'%':'0%';
-document.getElementById('pctQ').textContent=totalTopics?Math.round(quizPassedCount/totalTopics*100)+'%':'0%';
-document.getElementById('barFill').style.width=(totalTopics?Math.round(((watchedCount+quizPassedCount)/(totalTopics*2))*100):0)+'%';
+  container.innerHTML = '';
+  let totalTopics = 0, watchedCount = 0, quizPassedCount = 0;
+
+  DATA.forEach((mod, mi) => {
+    const row = document.createElement('div');
+    row.className = 'mod-title-row';
+    row.innerHTML = `<h2>${mod.mod}</h2><span class="mod-time">${mod.time}</span>`;
+    container.appendChild(row);
+
+    mod.topics.forEach((topic, ti) => {
+      totalTopics++;
+      const watched = !!state[key(mi,ti,'w')];
+      const quizPassed = !!state[key(mi,ti,'q')];
+      if (watched) watchedCount++;
+      if (quizPassed) quizPassedCount++;
+
+      const el = document.createElement('div');
+      el.className = 'topic' + (watched ? ' watched' : '') + (quizPassed ? ' quiz-passed' : '');
+      const altBtn = topic.altUrl ? `<a class="btn alt" href="${topic.altUrl}" target="_blank" rel="noopener">Alternativa (${topic.altChannel})</a>` : '';
+      el.innerHTML = `
+        <div class="topic-head">
+          <div class="topic-num">${watched ? '✓' : (ti+1)}</div>
+          <div class="topic-title">
+            <h3>${topic.title}</h3>
+            <div class="video-line">${topic.channel} · ${topic.note}</div>
+          </div>
+        </div>
+        <div class="row">
+          <a class="btn primary" href="${topic.url}" target="_blank" rel="noopener">▶ Assistir</a>
+          ${altBtn}
+          <button class="btn quiz" data-mi="${mi}" data-ti="${ti}">Testar conhecimento</button>
+          <span class="quiz-badge">quiz OK</span>
+          <label class="chk-wrap"><input type="checkbox" ${watched?'checked':''} data-mi="${mi}" data-ti="${ti}" class="watch-chk"> Assisti</label>
+        </div>
+      `;
+      el.querySelector('.watch-chk').addEventListener('change', (e) => {
+        state[key(mi,ti,'w')] = e.target.checked;
+        save(); render();
+      });
+      el.querySelector('.btn.quiz').addEventListener('click', () => openQuiz(mi, ti));
+      container.appendChild(el);
+    });
+  });
+
+  document.getElementById('pctW').textContent = totalTopics ? Math.round(watchedCount/totalTopics*100)+'%' : '0%';
+  document.getElementById('pctQ').textContent = totalTopics ? Math.round(quizPassedCount/totalTopics*100)+'%' : '0%';
+  document.getElementById('barFill').style.width = (totalTopics ? Math.round(((watchedCount+quizPassedCount)/(totalTopics*2))*100) : 0) + '%';
 }
-function openQuiz(mi,ti){
-const topic=DATA[mi].topics[ti];let current=0,correctCount=0;const answered=new Array(topic.quiz.length).fill(false);
-function renderQuestion(){
-if(current>=topic.quiz.length){
-const pct=Math.round((correctCount/topic.quiz.length)*100);if(pct>=70)state[key(mi,ti,'q')]=true;save();
-modalBody.innerHTML='<button class="close-x" id="closeBtn">×</button><h3>'+topic.title+'</h3><div class="result-score">'+correctCount+' / '+topic.quiz.length+' acertos ('+pct+'%)</div><p style="text-align:center;color:var(--muted);font-size:.85rem;">'+(pct>=70?'Mandou bem! Tópico marcado como dominado.':'Vale revisar o vídeo e tentar de novo.')+'</p><div class="modal-actions" style="justify-content:center;"><button class="btn primary" id="doneBtn">Fechar</button></div>';
-document.getElementById('closeBtn').onclick=closeModal;document.getElementById('doneBtn').onclick=()=>{closeModal();render()};return;
+
+function openQuiz(mi, ti){
+  const topic = DATA[mi].topics[ti];
+  let current = 0, correctCount = 0;
+  const answered = new Array(topic.quiz.length).fill(false);
+
+  function renderQuestion(){
+    if (current >= topic.quiz.length){
+      const pct = Math.round((correctCount/topic.quiz.length)*100);
+      if (pct >= 70) state[key(mi,ti,'q')] = true;
+      save();
+      modalBody.innerHTML = `
+        <button class="close-x" id="closeBtn">×</button>
+        <h3>${topic.title}</h3>
+        <div class="result-score">${correctCount} / ${topic.quiz.length} acertos (${pct}%)</div>
+        <p style="text-align:center; color:var(--muted); font-size:0.85rem;">${pct>=70 ? 'Mandou bem! Tópico marcado como dominado.' : 'Vale revisar o vídeo e tentar de novo.'}</p>
+        <div class="modal-actions" style="justify-content:center;">
+          <button class="btn primary" id="doneBtn">Fechar</button>
+        </div>
+      `;
+      document.getElementById('closeBtn').onclick = closeModal;
+      document.getElementById('doneBtn').onclick = () => { closeModal(); render(); };
+      return;
+    }
+    const q = topic.quiz[current];
+    modalBody.innerHTML = `
+      <button class="close-x" id="closeBtn">×</button>
+      <h3>${topic.title}</h3>
+      <div class="q-progress">Pergunta ${current+1} de ${topic.quiz.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div id="opts"></div>
+      <div id="explainBox"></div>
+    `;
+    document.getElementById('closeBtn').onclick = closeModal;
+    const optsDiv = document.getElementById('opts');
+    q.opts.forEach((optText, idx) => {
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.textContent = optText;
+      b.onclick = () => {
+        if (answered[current]) return;
+        answered[current] = true;
+        const buttons = optsDiv.querySelectorAll('.opt');
+        buttons[q.correct].classList.add('correct');
+        if (idx !== q.correct) b.classList.add('wrong');
+        else correctCount++;
+        document.getElementById('explainBox').innerHTML = `
+          <div class="explain">${q.exp}</div>
+          <div class="modal-actions">
+            <span></span>
+            <button class="btn primary" id="nextBtn">${current+1 < topic.quiz.length ? 'Próxima' : 'Ver resultado'}</button>
+          </div>
+        `;
+        document.getElementById('nextBtn').onclick = () => { current++; renderQuestion(); };
+      };
+      optsDiv.appendChild(b);
+    });
+  }
+
+  overlay.classList.add('open');
+  renderQuestion();
 }
-const q=topic.quiz[current];
-modalBody.innerHTML='<button class="close-x" id="closeBtn">×</button><h3>'+topic.title+'</h3><div class="q-progress">Pergunta '+(current+1)+' de '+topic.quiz.length+'</div><div class="q-text">'+q.q+'</div><div id="opts"></div><div id="explainBox"></div>';
-document.getElementById('closeBtn').onclick=closeModal;const optsDiv=document.getElementById('opts');
-q.opts.forEach((optText,idx)=>{const b=document.createElement('button');b.className='opt';b.textContent=optText;b.onclick=()=>{if(answered[current])return;answered[current]=true;const buttons=optsDiv.querySelectorAll('.opt');buttons[q.correct].classList.add('correct');if(idx!==q.correct)b.classList.add('wrong');else correctCount++;document.getElementById('explainBox').innerHTML='<div class="explain">'+q.exp+'</div><div class="modal-actions"><span></span><button class="btn primary" id="nextBtn">'+(current+1<topic.quiz.length?'Próxima':'Ver resultado')+'</button></div>';document.getElementById('nextBtn').onclick=()=>{current++;renderQuestion()}};optsDiv.appendChild(b)});
-}
-overlay.classList.add('open');renderQuestion()}
-function closeModal(){overlay.classList.remove('open')}
-overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});render();
+
+function closeModal(){ overlay.classList.remove('open'); }
+overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+render();
 </script>
 </body>
 </html>
